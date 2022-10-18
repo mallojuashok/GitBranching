@@ -1,30 +1,20 @@
 pipeline {
     agent any
      triggers {
-        pollSCM('* * * * *')
-    }
+        pollSCM('0 5 * * *')
+     }
     stages{
         stage('VCS'){
             steps{
-                git branch:'master', url:'https://github.com/mallojuashok/shopizer.git'
+                git branch:'feature', url:'https://github.com/mallojuashok/MyPracticeRepo.git'
             }
         }
-        stage('build'){
+        stage('Merge'){
             steps{
-                sh '/usr/share/maven/bin/mvn package'
-            }
-        }
-        stage('archive results'){
-            steps{
-                junit '**/surefire-reports/*.xml'
-            }
-        }
-        stage('artifacts'){
-            steps{
-                archiveArtifacts artifacts: '**/target/*.jar'
+                sh git checkout release
+				sh git merge feature --no-ff
             }
         }
         
-    }
-
-}
+        }
+ }
